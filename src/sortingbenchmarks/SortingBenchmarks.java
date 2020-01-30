@@ -41,7 +41,7 @@ public class SortingBenchmarks{
             long stoptTimeInsertion = System.nanoTime();
             
             long startTimeQuick = System.nanoTime();
-            int[] quickSorted = QuickSort(testCase, 0, num);
+            QuickSort(testCase, 0, num - 1);
             long stopTimeQuick = System.nanoTime();
             
             long bubbleTime = stopTimeBubble - startTimeBubble;
@@ -49,11 +49,11 @@ public class SortingBenchmarks{
             long quickTime = stopTimeQuick - startTimeQuick;
             long insertionTime = stoptTimeInsertion - startTimeInsertion;
             
+            System.out.println("Test " + j + ": " + num + " elments");
             System.out.println("Time required for bubble sort of " + num + " Terms: " + bubbleTime);
             System.out.println("Time required for selection sort of " + num + " Terms: " + selectionTime);
             System.out.println("Time required for insertion sort of " + num + " Terms: " + insertionTime);
             System.out.println("Time required for quick sort of " + num + " Terms: " + quickTime + "\n");
-            System.out.println(j);
             num *= 10;
         }
     }
@@ -88,52 +88,44 @@ public class SortingBenchmarks{
         return values;
     }
     
-    public static int[] QuickSort(int[] values, int low, int high){
-        try{
-        if ( low < high){
-            int pivot = values[low];
-            int leftWall = low;
-            int intTemp;
-        
-            for (int i = low + 1; i < high; i++){
-                if(values[i] < pivot){
-                    intTemp = values[i];
-                    values[i] = values[leftWall];
-                    values[leftWall] = intTemp;
-                    leftWall++;
-                }
-            }
-            intTemp = pivot;
-            pivot = values[leftWall];
-            values[leftWall] = pivot;
-            
-            int pivotLocation = leftWall;
-            
-            QuickSort(values, low, pivotLocation);
-            QuickSort(values, pivotLocation + 1, high);
-        }
-        }catch(StackOverflowError e){}
-        return values;
-    }
-    
-    /*public static int Partition(int[] values, int low, int high){
-        int pivot = values[low];
-        int leftWall = low;
-        int intTemp;
-        
-        for (int i = low + 1; i <= high; i++){
-            if(values[i] < pivot){
-                intTemp = values[i];
-                values[i] = values[leftWall];
-                values[leftWall] = intTemp;
-                leftWall++;
-            }
-        }
-        intTemp = pivot;
-        pivot = values[leftWall];
-        values[leftWall] = pivot;
-        return leftWall;
-    }*/
+    public static void QuickSort(int[] arr, int low, int high) {
+		if (arr == null || arr.length == 0)
+			return;
+ 
+		if (low >= high)
+			return;
+ 
+		// pick the pivot
+		int middle = low + (high - low) / 2;
+		int pivot = arr[middle];
+ 
+		// make left < pivot and right > pivot
+		int i = low, j = high;
+		while (i <= j) {
+			while (arr[i] < pivot) {
+				i++;
+			}
+ 
+			while (arr[j] > pivot) {
+				j--;
+			}
+ 
+			if (i <= j) {
+				int temp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = temp;
+				i++;
+				j--;
+			}
+		}
+ 
+		// recursively sort two sub parts
+		if (low < j)
+			QuickSort(arr, low, j);
+ 
+		if (high > i)
+			QuickSort(arr, i, high);
+	}
     
     public static int[] InsertionSort(int[] values){
         int intTemp;
